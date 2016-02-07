@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.Remoting.Channels;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -24,7 +25,7 @@ namespace Dota2ServerPingCheck
         private bool _refreshing = false;
         private const int Timeout = 15000;
         private int _packetCount = 5;
-        private int _detailPacketCount = 100;
+        private int _detailPacketCount = 50;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -57,25 +58,21 @@ namespace Dota2ServerPingCheck
             BindingSource bs = new BindingSource();
             bs.DataSource = _servers;
             dataGrid.DataSource = bs;
-            ReloadAllData();
+            RefreshData();
 
             ConsoleWrite("Program started successfully.", Color.Lime);
         }
 
-        private void btnRefreshAllPings_Click(object sender, EventArgs e)
+        #region Ping Tasks
+        private void CheckPingAsync(Dota2Server server)
         {
-        }
-
-        private void CheckPing(Dota2Server server)
-        {
-            Ping pinger = new Ping();
-            pinger.PingCompleted += pinger_PingCompleted;
+            Ping pingSender = new Ping();
+            pingSender.PingCompleted += PingCompleted;
             server.TotalPacketsSent++;
-            pinger.SendAsync(server.Address, Timeout, server);
-            ConsoleWrite("Requesting ping " + server.Name, Color.Lime);
+            pingSender.SendAsync(server.Address, Timeout, server);
         }
 
-        void pinger_PingCompleted(object sender, PingCompletedEventArgs e)
+        void PingCompleted(object sender, PingCompletedEventArgs e)
         {
             Dota2Server server = e.UserState as Dota2Server;
             if (e.Error == null)
@@ -86,12 +83,12 @@ namespace Dota2ServerPingCheck
                     server.TotalPacketReceived++;
                     if (server.TotalPacketsSent < _packetCount)
                     {
-                        CheckPing(server);
+                        CheckPingAsync(server);
                     }
                     else
                     {
-                        server._ping = (server.TotalRoundTripTime/server.TotalPacketsSent);
-                        server._packetLoss = 100-((server.TotalPacketsSent/server.TotalPacketReceived)*100);
+                        server._ping = (server.TotalRoundTripTime / server.TotalPacketsSent);
+                        server._packetLoss = 100 - ((server.TotalPacketsSent / server.TotalPacketReceived) * 100);
                         server.TotalPacketsSent = 0;
                         server.TotalRoundTripTime = 0;
                         server.TotalPacketReceived = 0;
@@ -105,25 +102,96 @@ namespace Dota2ServerPingCheck
             }
             else
             {
-                if (ConfigurationSettings.AppSettings["IsErrorEnabled"]=="true")
+                if (ConfigurationSettings.AppSettings["IsErrorEnabled"] == "true")
                     ConsoleWrite("Error occured while requesting ping " + server.Name + " " + e.Error, Color.Red);
                 else
                     ConsoleWrite("Error occured while requesting ping " + server.Name + " " + e.Error.Message, Color.Red);
                 server._ping = int.MaxValue;
             }
-            ReloadAllData();
+            RefreshData();
         }
 
-        private void ReloadAllData()
+        private void CheckPing(Dota2Server server)
         {
-            dataGrid.Update();
-            dataGrid.Refresh();
+            Thread t = new Thread(() => CheckPingSyncTask(server));
+            t.IsBackground = true;
+            ConsoleWrite("Requesting ping " + server.Name, Color.Lime);
+            t.Start();
         }
+
+        private void CheckPingSyncTask(Dota2Server server)
+        {
+            bool error = false;
+            UseWaitCursor = true;
+            Ping pingSender = new Ping();
+            for (int i = 0; i < _detailPacketCount; i++)
+            {
+                server.TotalPacketsSent++;
+                PingReply reply = null;
+                try
+                {
+                    reply = pingSender.Send(server.Address, Timeout);
+                }
+                catch (Exception e)
+                {
+                    if (ConfigurationSettings.AppSettings["IsErrorEnabled"] == "true")
+                        ConsoleWrite("Error occured while requesting ping " + server.Name + " " + e, Color.Red);
+                    else
+                        ConsoleWrite("Error occured while requesting ping " + server.Name + " " + e.Message, Color.Red);
+
+                    error = true;
+                    break;
+                }
+                if (reply.Status == IPStatus.Success)
+                {
+                    server.TotalPacketReceived++;
+                    server.TotalRoundTripTime += reply.RoundtripTime;
+                }
+                else
+                {
+                    ConsoleWrite("Error occured while requesting ping " + server.Name + " " + reply.Status, Color.Red);
+                    error = true;
+                    break;
+                }
+            }
+
+            if (!error)
+            {
+                server._ping = (server.TotalRoundTripTime / server.TotalPacketsSent);
+
+                server._packetLoss = 100 - ((server.TotalPacketsSent / server.TotalPacketReceived) * 100);
+            }
+
+            MessageBox.Show("ServerName = " + server.Name + "\r\n"
+                           + "Total Packets sent = " + server.TotalPacketsSent + "\r\n"
+                           + "Total Packets Received = " + server.TotalPacketReceived + "\r\n"
+                           + "Total Time taken = " + server.TotalRoundTripTime + "\r\n"
+                           + "Average Ping(mili-Seconds) = " + server.Ping + "\r\n"
+                           + "Packet Loss( % ) = " + server.PacketLoss + "\r\n"
+               , "Detail Ping Results", MessageBoxButtons.OK);
+
+            server.TotalPacketsSent = 0;
+            server.TotalRoundTripTime = 0;
+            server.TotalPacketReceived = 0;
+            RefreshData();
+            UseWaitCursor = false;
+        }
+        #endregion
+
+        #region MainForm Items
+        public delegate void DelegateConsoleWrite(string text, Color color);
+
+        public delegate void DelegateRefreshData();
 
         private void ConsoleWrite(string text, Color color)
         {
-            tbConsole.SelectionColor = color;
-            tbConsole.AppendText("> " + text + "\r\n");
+            if (tbConsole.InvokeRequired)
+                tbConsole.Invoke(new DelegateConsoleWrite(ConsoleWrite), new object[] { text, color });
+            else
+            {
+                tbConsole.SelectionColor = color;
+                tbConsole.AppendText("> " + text + "\r\n");
+            }
         }
 
         private void tbConsole_TextChanged(object sender, EventArgs e)
@@ -132,10 +200,21 @@ namespace Dota2ServerPingCheck
             tbConsole.ScrollToCaret();
         }
 
-        private void dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void RefreshData()
         {
+            if (dataGrid.InvokeRequired)
+            {
+                dataGrid.Invoke(new DelegateRefreshData(RefreshData), new object[] { });
+            }
+            else
+            {
+                dataGrid.Update();
+                dataGrid.Refresh();
+            }
         }
+        #endregion
 
+        #region ContextMenu Items
         private void dataGrid_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -160,16 +239,54 @@ namespace Dota2ServerPingCheck
 
         private void ItemRefresh(Dota2Server server)
         {
-            CheckPing(server);
+            ConsoleWrite("Requesting ping " + server.Name, Color.Lime);
+            CheckPingAsync(server);
         }
 
         private void ItemDetailRefresh(Dota2Server server)
         {
             CheckPing(server);
         }
+        #endregion
 
-        private void dataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        #region MenuStrip Items
+        private void aboutDota2ServerPingCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            AboutApp aboutForm = new AboutApp();
+            aboutForm.Show();
+        }
+
+        private void howToUseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string info = "Step1:\r\n" +
+                          "\tGo to file and click \"Refresh All pings\" to get the updated ping information."
+                          + "Note that this method uses a small amout of packets therefore if your internet "
+                          + "fluctuates it might give in-accurate result.\r\n"
+                          + "\r\n"
+                          + "Step2 (Optional):\r\n" 
+                          + "\tThe results can be sorted on the basis of server Name, server Ip, Ping, "
+                          + "Packet-Loss etc in Ascending/Dscending order. To do so click on the "
+                          + "column title you want to sort. Click again to change the sorting order.\r\n"
+                          + "\r\n"
+                          + "Step3 (Optional):\r\n"
+                          + "\tSome people dont trust there internet so they might wana refresh the results "
+                          + "but do they have to refresh all? no you can just right click any row in the "
+                          + "table and a menu will apprear click refresh to re check the ping only for that "
+                          + "particular row.\r\n"
+                          + "\r\n"
+                          + "Step4 :\r\n"
+                          + "\tMany people like me are PTCL users.(you knw what i mean :p) can face packet "
+                          + "loss. To get more accurate results on packet loss right click any row in the "
+                          + "table and click detail refresh. Note that The detail refresh is a Syncronus "
+                          + "process i.e. it takes time so be patient. thats one of the reason you can't "
+                          + "detail refresh the whole table.\r\n"
+                          + "\r\n"
+                          + "Note:\r\n"
+                          + "\tAnything that is greyed out will be released later.\r\n"
+                          + "\r\n"
+                          + "\t\t\t ..HAPPY GAMMING.."
+                          ;
+            MessageBox.Show(info, "How to Guide.", MessageBoxButtons.OK);
         }
 
         private void refreshAllPingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -186,7 +303,8 @@ namespace Dota2ServerPingCheck
                 {
                     foreach (Dota2Server server in _servers)
                     {
-                        CheckPing(server);
+                        ConsoleWrite("Requesting ping " + server.Name, Color.Lime);
+                        CheckPingAsync(server);
                     }
                 }
             }
@@ -202,21 +320,13 @@ namespace Dota2ServerPingCheck
         {
         }
 
-        private void howToUseToolStripMenuItem_Click(object sender, EventArgs e)
+        private void contactMeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string info = "Step1:\r\n" +
-                          "\tGo to file and click \"Refresh All pings\" to get the updated ping information."
-                          +"Note that this method uses a small amout of packets therefore if your internet "
-                          +"fluctuates it might give in-accurate result.\r\n"
-                          +"Step2:\r\n";
-            MessageBox.Show(info, "How to Guide.", MessageBoxButtons.OK);
+            Form contactForm = new ContactMe();
+            contactForm.Show();
         }
+        #endregion
 
-        private void aboutDota2ServerPingCheckToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AboutApp aboutForm= new AboutApp();
-            aboutForm.Show();
-        }
 
     }
 }

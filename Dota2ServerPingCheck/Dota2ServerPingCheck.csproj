@@ -50,6 +50,12 @@
     <Compile Include="AboutApp.Designer.cs">
       <DependentUpon>AboutApp.cs</DependentUpon>
     </Compile>
+    <Compile Include="ContactMe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContactMe.Designer.cs">
+      <DependentUpon>ContactMe.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dota2Server.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -62,6 +68,9 @@
     <Compile Include="SortableBindingList.cs" />
     <EmbeddedResource Include="AboutApp.resx">
       <DependentUpon>AboutApp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContactMe.resx">
+      <DependentUpon>ContactMe.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

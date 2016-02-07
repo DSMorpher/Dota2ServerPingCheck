@@ -41,6 +41,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.howToUseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutDota2ServerPingCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contactMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -59,8 +60,6 @@
             this.dataGrid.Name = "dataGrid";
             this.dataGrid.Size = new System.Drawing.Size(467, 298);
             this.dataGrid.TabIndex = 0;
-            this.dataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellClick);
-            this.dataGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGrid_ColumnHeaderMouseClick);
             this.dataGrid.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGrid_MouseClick);
             // 
             // DGVServerName
@@ -91,6 +90,7 @@
             this.tbConsole.BackColor = System.Drawing.SystemColors.Desktop;
             this.tbConsole.Location = new System.Drawing.Point(12, 331);
             this.tbConsole.Name = "tbConsole";
+            this.tbConsole.ReadOnly = true;
             this.tbConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.tbConsole.Size = new System.Drawing.Size(467, 127);
             this.tbConsole.TabIndex = 3;
@@ -144,14 +144,14 @@
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.howToUseToolStripMenuItem,
-            this.aboutDota2ServerPingCheckToolStripMenuItem});
+            this.aboutDota2ServerPingCheckToolStripMenuItem,
+            this.contactMeToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // howToUseToolStripMenuItem
             // 
-            this.howToUseToolStripMenuItem.Enabled = false;
             this.howToUseToolStripMenuItem.Name = "howToUseToolStripMenuItem";
             this.howToUseToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.howToUseToolStripMenuItem.Text = "How to use";
@@ -163,6 +163,13 @@
             this.aboutDota2ServerPingCheckToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.aboutDota2ServerPingCheckToolStripMenuItem.Text = "About Application";
             this.aboutDota2ServerPingCheckToolStripMenuItem.Click += new System.EventHandler(this.aboutDota2ServerPingCheckToolStripMenuItem_Click);
+            // 
+            // contactMeToolStripMenuItem
+            // 
+            this.contactMeToolStripMenuItem.Name = "contactMeToolStripMenuItem";
+            this.contactMeToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.contactMeToolStripMenuItem.Text = "Contact Me";
+            this.contactMeToolStripMenuItem.Click += new System.EventHandler(this.contactMeToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -199,6 +206,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem howToUseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutDota2ServerPingCheckToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem contactMeToolStripMenuItem;
     }
 }
 
