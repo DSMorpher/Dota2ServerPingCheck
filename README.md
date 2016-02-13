@@ -3,7 +3,7 @@ An application to check ping and packet-loss before launching the game.
  
 Current Version: 1.0    
 
-	Basically its a shortcut tool to check ping and packet-loss before even 
+	Basically its a shortcut tool to check ping and packet-loss before even
 launching the game. Many might think whats the need fo this tool as the game
 itself tells the ping. Well there are many reasons some of them are listed.
 
@@ -32,8 +32,8 @@ request a fork and commit there changes.
 
 Version Changes:   
    
-main sycn and Async requests have been completed
-detail info has been completed     
+main sync and Async requests have been completed 
+detail info has been completed
 
 
 Authored by:   
