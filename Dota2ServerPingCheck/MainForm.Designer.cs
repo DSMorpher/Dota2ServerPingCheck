@@ -35,15 +35,17 @@
             this.tbConsole = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshAllPingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RefreshAllPingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.howToUseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutDota2ServerPingCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contactMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.H = new System.Windows.Forms.ToolStripMenuItem();
+            this.AboutDota2ServerPingCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ContactMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGrid
@@ -56,9 +58,10 @@
             this.DGVServerName,
             this.DGVServerIp,
             this.DGVPing});
-            this.dataGrid.Location = new System.Drawing.Point(12, 27);
+            this.dataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrid.Location = new System.Drawing.Point(3, 3);
             this.dataGrid.Name = "dataGrid";
-            this.dataGrid.Size = new System.Drawing.Size(467, 298);
+            this.dataGrid.Size = new System.Drawing.Size(504, 325);
             this.dataGrid.TabIndex = 0;
             this.dataGrid.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGrid_MouseClick);
             // 
@@ -88,14 +91,15 @@
             // tbConsole
             // 
             this.tbConsole.BackColor = System.Drawing.SystemColors.Desktop;
-            this.tbConsole.Location = new System.Drawing.Point(12, 331);
+            this.tbConsole.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbConsole.Location = new System.Drawing.Point(3, 334);
             this.tbConsole.Name = "tbConsole";
             this.tbConsole.ReadOnly = true;
             this.tbConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.tbConsole.Size = new System.Drawing.Size(467, 127);
+            this.tbConsole.Size = new System.Drawing.Size(504, 136);
             this.tbConsole.TabIndex = 3;
             this.tbConsole.Text = "";
-            this.tbConsole.TextChanged += new System.EventHandler(this.tbConsole_TextChanged);
+            this.tbConsole.TextChanged += new System.EventHandler(this.TbConsole_TextChanged);
             // 
             // menuStrip1
             // 
@@ -104,80 +108,96 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(491, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(534, 24);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshAllPingsToolStripMenuItem,
-            this.saveConfigurationToolStripMenuItem,
-            this.exitToolStripMenuItem});
+            this.RefreshAllPingsToolStripMenuItem,
+            this.SaveConfigurationToolStripMenuItem,
+            this.ExitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // refreshAllPingsToolStripMenuItem
+            // RefreshAllPingsToolStripMenuItem
             // 
-            this.refreshAllPingsToolStripMenuItem.Name = "refreshAllPingsToolStripMenuItem";
-            this.refreshAllPingsToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.refreshAllPingsToolStripMenuItem.Text = "Refresh All Pings";
-            this.refreshAllPingsToolStripMenuItem.Click += new System.EventHandler(this.refreshAllPingsToolStripMenuItem_Click);
+            this.RefreshAllPingsToolStripMenuItem.Name = "RefreshAllPingsToolStripMenuItem";
+            this.RefreshAllPingsToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.RefreshAllPingsToolStripMenuItem.Text = "Refresh All Pings";
+            this.RefreshAllPingsToolStripMenuItem.Click += new System.EventHandler(this.RefreshAllPingsToolStripMenuItem_Click);
             // 
-            // saveConfigurationToolStripMenuItem
+            // SaveConfigurationToolStripMenuItem
             // 
-            this.saveConfigurationToolStripMenuItem.Enabled = false;
-            this.saveConfigurationToolStripMenuItem.Name = "saveConfigurationToolStripMenuItem";
-            this.saveConfigurationToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.saveConfigurationToolStripMenuItem.Text = "Save Configuration";
-            this.saveConfigurationToolStripMenuItem.Click += new System.EventHandler(this.saveConfigurationToolStripMenuItem_Click);
+            this.SaveConfigurationToolStripMenuItem.Enabled = false;
+            this.SaveConfigurationToolStripMenuItem.Name = "SaveConfigurationToolStripMenuItem";
+            this.SaveConfigurationToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.SaveConfigurationToolStripMenuItem.Text = "Save Configuration";
+            this.SaveConfigurationToolStripMenuItem.Click += new System.EventHandler(this.SaveConfigurationToolStripMenuItem_Click);
             // 
-            // exitToolStripMenuItem
+            // ExitToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
+            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.ExitToolStripMenuItem.Text = "Exit";
+            this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.howToUseToolStripMenuItem,
-            this.aboutDota2ServerPingCheckToolStripMenuItem,
-            this.contactMeToolStripMenuItem});
+            this.H,
+            this.AboutDota2ServerPingCheckToolStripMenuItem,
+            this.ContactMeToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
-            // howToUseToolStripMenuItem
+            // H
             // 
-            this.howToUseToolStripMenuItem.Name = "howToUseToolStripMenuItem";
-            this.howToUseToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.howToUseToolStripMenuItem.Text = "How to use";
-            this.howToUseToolStripMenuItem.Click += new System.EventHandler(this.howToUseToolStripMenuItem_Click);
+            this.H.Name = "H";
+            this.H.Size = new System.Drawing.Size(171, 22);
+            this.H.Text = "How to use";
+            this.H.Click += new System.EventHandler(this.HowToUseToolStripMenuItem_Click);
             // 
-            // aboutDota2ServerPingCheckToolStripMenuItem
+            // AboutDota2ServerPingCheckToolStripMenuItem
             // 
-            this.aboutDota2ServerPingCheckToolStripMenuItem.Name = "aboutDota2ServerPingCheckToolStripMenuItem";
-            this.aboutDota2ServerPingCheckToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.aboutDota2ServerPingCheckToolStripMenuItem.Text = "About Application";
-            this.aboutDota2ServerPingCheckToolStripMenuItem.Click += new System.EventHandler(this.aboutDota2ServerPingCheckToolStripMenuItem_Click);
+            this.AboutDota2ServerPingCheckToolStripMenuItem.Name = "AboutDota2ServerPingCheckToolStripMenuItem";
+            this.AboutDota2ServerPingCheckToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.AboutDota2ServerPingCheckToolStripMenuItem.Text = "About Application";
+            this.AboutDota2ServerPingCheckToolStripMenuItem.Click += new System.EventHandler(this.AboutDota2ServerPingCheckToolStripMenuItem_Click);
             // 
-            // contactMeToolStripMenuItem
+            // ContactMeToolStripMenuItem
             // 
-            this.contactMeToolStripMenuItem.Name = "contactMeToolStripMenuItem";
-            this.contactMeToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.contactMeToolStripMenuItem.Text = "Contact Me";
-            this.contactMeToolStripMenuItem.Click += new System.EventHandler(this.contactMeToolStripMenuItem_Click);
+            this.ContactMeToolStripMenuItem.Name = "ContactMeToolStripMenuItem";
+            this.ContactMeToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.ContactMeToolStripMenuItem.Text = "Contact Me";
+            this.ContactMeToolStripMenuItem.Click += new System.EventHandler(this.ContactMeToolStripMenuItem_Click);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.tbConsole, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.dataGrid, 0, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 27);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(510, 473);
+            this.tableLayoutPanel1.TabIndex = 5;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(491, 470);
-            this.Controls.Add(this.tbConsole);
-            this.Controls.Add(this.dataGrid);
+            this.ClientSize = new System.Drawing.Size(534, 512);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
@@ -186,6 +206,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -200,13 +221,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DGVPing;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem refreshAllPingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveConfigurationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RefreshAllPingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SaveConfigurationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem howToUseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutDota2ServerPingCheckToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem contactMeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem H;
+        private System.Windows.Forms.ToolStripMenuItem AboutDota2ServerPingCheckToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ContactMeToolStripMenuItem;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }
 

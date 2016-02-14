@@ -18,3 +18,4 @@ E:\GitRepo\Dota2PingCheck\Dota2ServerPingCheck\obj\Debug\Dota2ServerPingCheck.Ma
 E:\GitRepo\Dota2PingCheck\Dota2ServerPingCheck\obj\Debug\Dota2ServerPingCheck.Properties.Resources.resources
 E:\GitRepo\Dota2PingCheck\Dota2ServerPingCheck\obj\Debug\Dota2ServerPingCheck.csproj.GenerateResource.Cache
 E:\GitRepo\Dota2PingCheck\Dota2ServerPingCheck\obj\Debug\Dota2ServerPingCheck.ContactMe.resources
+E:\GitRepo\Dota2PingCheck\Dota2ServerPingCheck\obj\Debug\Dota2ServerPingCheck.csprojResolveAssemblyReference.cache

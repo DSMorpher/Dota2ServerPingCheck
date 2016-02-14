@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Threading;
 
 namespace Dota2ServerPingCheck
 {
     class Dota2Server
     {
         private string _name = "";
-        public long _ping = int.MaxValue;
         private string _address = "";
-        public int _packetLoss = 100;
-        public int TotalPacketsSent = 0;
-        public int TotalPacketReceived = 0;
-        public long TotalRoundTripTime = 0;
+        private ServerStatus _status;
 
         public string Name
         {
@@ -26,26 +20,58 @@ namespace Dota2ServerPingCheck
             get { return _address; }
         }
 
+        [Browsable(false)]
+        public ServerStatus Status
+        {
+            get { return _status; }
+            set { _status = value; }
+        }
+
+        [DisplayName("Ping (mili-Seconds)")]
         public long Ping
         {
-            get { return _ping; }
-            //set { _ping = value; }
+            get
+            {
+                if (_status != null)
+                    return _status.Ping;
+                
+                return int.MaxValue;
+            }
         }
 
-        public int PacketLoss
+        [DisplayName("Packet Loss (%)")]
+        public double PacketLoss
         {
-            get { return _packetLoss; }
-            //set { _packetLoss = value; }
+            get
+            {
+                if (_status != null)
+                    return Math.Round(_status.PacketLoss, 2);
+                
+                return Math.Round(100d, 2);
+            }
         }
-
-        //public int TotalPacketsSent { get; set; }
-        //public long TotalRoundTripTime { get; set; }
 
         public Dota2Server(string address, string name)
         {
             _address = address;
             _name = name;
+            _status = new ServerStatus();
         }
 
+        public void RefreshPing(bool isDetailed)
+        {
+            if (_status != null)
+            {
+                ThreadPool.QueueUserWorkItem(RefreshPingInternal, isDetailed);
+            }
+        }
+
+        private void RefreshPingInternal(object isDetail)
+        {
+            if (_status != null)
+            {
+                _status.RefreshPing(this, (bool)isDetail);
+            }
+        }
     }
 }

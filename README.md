@@ -1,11 +1,11 @@
 # Dota2ServerPingCheck
 An application to check ping and packet-loss before launching the game.
  
-Current Version: 1.0    
+Current Version: 1.1    
 
-	Basically its a shortcut tool to check ping and packet-loss before even
-launching the game. Many might think whats the need fo this tool as the game
-itself tells the ping. Well there are many reasons some of them are listed.
+	Basically its a tool to check ping and packet-loss before even launching
+the game. Many might think whats the need fo this tool as the game itself 
+tells the ping. Well there are many reasons some of them are listed.
 
 - Dota2 takes time to start even on an i7 Laptop it takes like 30 Seconds 
 	minimum to start. Its very annoying that you take 30 seconds + time 
@@ -32,8 +32,8 @@ request a fork and commit there changes.
 
 Version Changes:   
    
-main sync and Async requests have been completed 
-detail info has been completed
+GUI changes
+Packet loss bug-fixes
 
 
 Authored by:   
